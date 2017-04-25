@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Random Quote Machine</title>
+		<meta charset="utf-8">
+		<!-- <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/superhero/bootstrap.min.css"> -->
+		<link rel="stylesheet" type="text/css" href="bootstrap.min.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+		<style>
+			body {
+				font-family: sans-serif;
+				margin-top: 5%;
+			}
+			.quote-box {
+				padding: 20px;
+				margin: 10px 0 10px 0;
+				background-color:rgb(78,93,108);
+			}
+			.center {
+				margin: 0 auto 0;
+			}
+			.margin-top {
+				margin-top: 10px;
+			}
+			.huge {
+				font-family: serif;
+				font-size: 30px;
+			}
+			#tweet-this {
+				font-size: 30px;
+			}
+			#tweet-this:hover,#tweet-this:focus {
+				color: #1da1f2; 
+			}
+			.footer {
+				margin-top: 10%;
+			}
+			.footer a {
+				color: gray;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">			
+			<div class="row">
+				<div class="container text-center">
+					<div class="quote-box">
+						<p class="huge">
+							<i class="fa fa-quote-left"></i>
+							<span id="quote-text">No man is ever free who is not master of himself.</span>
+							<i class="fa  fa-quote-right"></i>
+							<p class="text-center" id="quote-author">-Anonymous</p>
+
+						</p>
+
+					</div>
+					<div class="text-center">
+						<p><i class="fa fa-twitter" id="tweet-this"></i></p>
+					</div>
+					
+				</div>
+				<div class="margin-top text-center">
+					<button class="btn btn-primary" id="get-quote">New Quote</button>
+				</div>
+			</div>
+			<div class="text-center footer">
+				by <a href="#">@unovaxan</a>
+			</div>
+		</div>
+		<script src="jquery-3.2.1.min.js"></script>
+		<!-- <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script> -->
+		<script src="../../bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+		<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script> -->
+		<script>
+			$('document').ready(function () {
+				getQuote();
+				$('#get-quote').on('click',getQuote);
+				$('#tweet-this').on('click',tweetThis);
+				
+			});
+			
+			function getQuote() {
+				$.ajax({
+						url: 'https://random-quote-generator.herokuapp.com/api/quotes/random',
+						dataType: 'json',
+						success: function(response) {
+							printQuote(response);
+						}
+
+					}).fail(function(response) {
+						console.log(response);
+					});
+			}
+			function printQuote(quote) {
+				$('#quote-text').empty().text(quote.quote);
+				$('#quote-author').empty().text('-' + quote.author);
+			}
+			function tweetThis() {
+				var tweetText = '"' + $('#quote-text').text() + '" ' + $('#quote-author').text() ;
+				if(tweetText.length > 140) {
+					alert("Text to tweet must be less than 140 characters!");
+				}
+				else {
+					var twtLink = 'http://twitter.com/home?status=' +encodeURIComponent(tweetText);
+					window.open(twtLink,'_blank');
+				}
+				console.log(tweetText);
+			}
+		</script>
+	</body>
+</html>
